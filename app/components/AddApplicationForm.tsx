@@ -11,6 +11,7 @@ export default function AddApplicationForm({ onApplicationAdded }: Props) {
     const [company, setCompany] = useState('')
     const [position, setPosition] = useState('')
     const [location, setLocation] = useState('')
+    const [salaryRange, setsalaryRange] = useState('')
     const [url, setUrl] = useState('')
     const [status, setStatus] = useState('')
     const [loading, setLoading] = useState(false)
@@ -22,7 +23,7 @@ export default function AddApplicationForm({ onApplicationAdded }: Props) {
         try {
             const { error } = await supabase
                 .from('applications')
-                .insert([{ company, position, location, url, status }])
+                .insert([{ company, position, location, salary_range: salaryRange, url, status }])
 
             if (error) throw error
 
@@ -32,6 +33,7 @@ export default function AddApplicationForm({ onApplicationAdded }: Props) {
             setPosition('')
             setLocation('')
             setUrl('')
+            setsalaryRange('')
             setStatus('')
             alert('Application added!')
 
@@ -100,6 +102,19 @@ export default function AddApplicationForm({ onApplicationAdded }: Props) {
             </div>
 
             <div>
+                <label className="block text-sm font-medium mb-1 text-blue-400">
+                    Salary Range
+                </label>
+                <input
+                    type="text"
+                    value={salaryRange}
+                    onChange={(e) => setsalaryRange(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                />
+            </div>
+
+            <div>
                 <label className="block text-sm font-medium mb-1 text-zinc-300">
                     Status
                 </label>
@@ -108,7 +123,7 @@ export default function AddApplicationForm({ onApplicationAdded }: Props) {
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                    className={`w-full px-3 py-2 border rounded-lg outline-none text-zinc-500`}
                 />
             </div>
 

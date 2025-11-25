@@ -55,26 +55,33 @@ export default function ApplicationList({ refreshTrigger }: Props) {
 
     return (
         <div className="mt-8 space-y-4 w-[60vw] min-[900px]:w-[40vw] mx-auto ">
-            <h2 className="text-2xl text-center font-bold text-zinc-200">Your Applications</h2>
+            <div>
+                <h2 className="text-2xl text-center font-bold text-zinc-200">Your Applications </h2>
+                <span className="text-md text-blue-400">Total App's: {applications.length}</span>
+            </div>
             <div className="grid gap-4 pr-4 max-h-[70vh] overflow-auto">
                 {applications.map((app) => (
                     <div
                         key={app.id}
                         className="border border-black rounded-lg p-4 hover:shadow-2xl transition-shadow"
                     >
-                        <div className="text-zinc-300 flex justify-between items-start">
+                        <div className="text-zinc-300 flex justify-between items-start relative">
                             <div>
-                                <h3 className="text-xl font-light">Compania: <span className="font-bold">{app.company}</span></h3>
+                                <h3 className="text-[1rem] font-light">Compania: <span className="font-bold">{app.company}</span></h3>
                                 <p className="font-light mt-1">Posición: <span className="font-bold">{app.position}</span></p>
                                 {app.location && (
                                     <p className="text-sm text-zinc-500 mt-2">Ubicación:📍{app.location}</p>
                                 )}
                             </div>
-                            <span className="text-sm">
-                                Estado: <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">{app.status}</span>
-                            </span>
-                        </div>
 
+                            <span className="text-sm absolute top-0 right-0 bg-black/50  p-3 rounded-full">
+                                Estado: <span className={`px-3 py-1  rounded-full text-sm ${app.status === 'Applied' ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-700"}`} >{app.status}</span>
+                            </span>
+
+                        </div>
+                        {app.salary_range && (
+                            <p className="text-zinc-500">Rango Salarial: <span className="text-blue-400">$US {app.salary_range}</span></p>
+                        )}
                         <div className="mt-3 flex gap-4 text-sm text-zinc-600">
                             <span>Applied: {new Date(app.applied_date).toLocaleDateString()}</span>
                             {app.url && (
