@@ -6,6 +6,9 @@ import { supabase } from "@/lib/supabase"
 export default function AddApplicationForm() {
     const [company, setCompany] = useState('')
     const [position, setPosition] = useState('')
+    const [location, setLocation] = useState('')
+    const [url, setUrl] = useState('')
+    const [status, setStatus] = useState('')
     const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -15,7 +18,7 @@ export default function AddApplicationForm() {
         try {
             const { error } = await supabase
                 .from('applications')
-                .insert([{ company, position }])
+                .insert([{ company, position, location, url, status }])
 
             if (error) throw error
 
@@ -23,6 +26,9 @@ export default function AddApplicationForm() {
 
             setCompany('')
             setPosition('')
+            setLocation('')
+            setUrl('')
+            setStatus('')
             alert('Application added!')
         } catch (error) { 
             console.error('Error: ', error)
@@ -55,6 +61,45 @@ export default function AddApplicationForm() {
                     type="text"
                     value={position}
                     onChange={(e) => setPosition(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1 text-zinc-300">
+                    URL
+                </label>
+                <input
+                    type="text"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1 text-zinc-300">
+                    Location
+                </label>
+                <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1 text-zinc-300">
+                    Status
+                </label>
+                <input
+                    type="text"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
                     required
                     className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
                 />
