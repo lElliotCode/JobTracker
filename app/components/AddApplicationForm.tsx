@@ -3,7 +3,11 @@
 import { useState } from "react"
 import { supabase } from "@/lib/supabase"
 
-export default function AddApplicationForm() {
+type Props = {
+    onApplicationAdded?: () => void
+}
+
+export default function AddApplicationForm({ onApplicationAdded }: Props) {
     const [company, setCompany] = useState('')
     const [position, setPosition] = useState('')
     const [location, setLocation] = useState('')
@@ -30,7 +34,10 @@ export default function AddApplicationForm() {
             setUrl('')
             setStatus('')
             alert('Application added!')
-        } catch (error) { 
+
+            // Llamamos a un callback para forzar refrescar la lista
+            onApplicationAdded?.()
+        } catch (error) {
             console.error('Error: ', error)
             alert('Error adding appliaction')
         } finally {

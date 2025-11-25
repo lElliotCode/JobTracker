@@ -14,13 +14,17 @@ type Application = {
     salary_range: string | null
 }
 
-export default function ApplicationList() {
+type Props = {
+    refreshTrigger?: number
+}
+
+export default function ApplicationList({ refreshTrigger }: Props) {
     const [applications, setApplications] = useState<Application[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchApplications()
-    }, [])
+    }, [refreshTrigger])
 
     const fetchApplications = async () => {
         try {
@@ -50,9 +54,9 @@ export default function ApplicationList() {
     }
 
     return (
-        <div className="mt-8 space-y-4 w-[60vw]">
+        <div className="mt-8 space-y-4 w-[60vw] min-[900px]:w-[40vw] mx-auto ">
             <h2 className="text-2xl text-center font-bold text-zinc-200">Your Applications</h2>
-            <div className="grid gap-4">
+            <div className="grid gap-4 pr-4 max-h-[70vh] overflow-auto">
                 {applications.map((app) => (
                     <div
                         key={app.id}
@@ -74,7 +78,7 @@ export default function ApplicationList() {
                         <div className="mt-3 flex gap-4 text-sm text-zinc-600">
                             <span>Applied: {new Date(app.applied_date).toLocaleDateString()}</span>
                             {app.url && (
-                                <p className="">URL:  
+                                <p className="">URL:
                                     <a
                                         href={app.url}
                                         target="_blank"
