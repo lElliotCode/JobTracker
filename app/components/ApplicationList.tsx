@@ -63,7 +63,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                 {applications.map((app) => (
                     <div
                         key={app.id}
-                        className="border border-black rounded-lg p-4 hover:shadow-2xl transition-shadow"
+                        className="border-b border-black rounded-lg p-4 hover:shadow-xl bg-black/20 transition-shadow"
                     >
                         <div className="text-zinc-300 flex justify-between items-start relative">
                             <div>
@@ -82,8 +82,8 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                         {app.salary_range && (
                             <p className="text-zinc-500">Rango Salarial: <span className="text-blue-400">$US {app.salary_range}</span></p>
                         )}
-                        <div className="mt-3 flex gap-4 text-sm text-zinc-600">
-                            <span>Applied: {new Date(app.applied_date).toLocaleDateString()}</span>
+                        <div className="mt-3 flex gap-4 text-sm text-zinc-600 relative">
+                            <span className="text-gray-400">Applied: {new Date(app.applied_date).toLocaleDateString()}</span>
                             {app.url && (
                                 <p className="">URL:
                                     <a
@@ -96,7 +96,14 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                                     </a>
                                 </p>
                             )}
+                            <button
+                                onClick={() => alert(`Deleting application ${app.company}`)}
+                                className="text-sm absolute bottom-0 right-2 px-4 py-1 rounded-full cursor-pointer border border-red-900 transition-colors text-red-300 font-light hover:bg-red-900"
+                            >
+                                Delete
+                            </button>
                         </div>
+
                     </div>
                 ))}
             </div>
