@@ -21,6 +21,7 @@ type Props = {
 export default function ApplicationList({ refreshTrigger }: Props) {
     const [applications, setApplications] = useState<Application[]>([])
     const [deleteId, setDeleteId] = useState<string | null>(null)
+    const [deletingId, setDeletingId] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -47,7 +48,12 @@ export default function ApplicationList({ refreshTrigger }: Props) {
         setDeleteId(id)
     }
 
+    const appToDelete = applications.find(app => app.id === deleteId)
+
     const confirmDelete = async () => {
+        if (!deleteId) return
+
+        setDeleteId(deleteId)
 
         try {
             const { error } = await supabase
@@ -63,7 +69,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
             console.error('Error deleting application: ', error)
             alert('Error deleting application')
         } finally {
-
+            setDeleteId(null)
         }
     }
 
@@ -74,7 +80,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
 
     if (applications.length === 0) {
         return (
-            <div className="text-center py-8 text-zinc-600">No applications yet. Add your first one above!</div>
+            <div className="text-center py-8 text-zinc-600 m-auto">No applications yet. Add your first one!</div>
         )
     }
 
@@ -82,16 +88,21 @@ export default function ApplicationList({ refreshTrigger }: Props) {
         <div className="mt-8 space-y-4 w-[60vw] min-[900px]:w-[40vw] mx-auto ">
             {deleteId && (
                 <div
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-[fadeIn_0.2s_ease-out]"
                     onClick={() => setDeleteId(null)} // <-- Si hacemos click fuera del cartel se cierra
                 >
                     <div
-                        className="bg-white rounded-lg p-6 max-w-sm mx-4"
+                        className="bg-white rounded-lg p-6 max-w-sm mx-4 animate-[zoomIn_0.2s_ease-out]"
                         onClick={(e) => e.stopPropagation()} // <-- Evita que el click dentro cierre el modal
                     >
-                        <h3 className="text-xl text-center mb-2">Delete Application?</h3>
-                        <p className="text-sm text-gray-600 text-center">This action cannot be undone. The application will be <span className="font-bold">permanently deleted</span></p>
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="flex-shrink-0 w-10 h-10 rounded-full border border-red-400 bg-red-100 flex items-center justify-center">
+                                <span className="text-red-600 text-xl -translate-y-1">⚠️</span>
+                            </div>
+                            <h3 className="text-xl text-center mb-2">Delete Application to <strong>{appToDelete?.company}</strong>?</h3>
+                            <p className="text-sm text-gray-600 text-center">This action cannot be undone. The application will be <span className="font-bold">permanently deleted</span></p>
 
+                        </div>
                         <div className="flex justify-end gap-4 mt-4">
                             <button
                                 onClick={() => setDeleteId(null)}
@@ -100,10 +111,11 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                                 Cancel
                             </button>
                             <button
-                            className="border-l border-r border-red-600 text-red-800 hover:bg-red-300 cursor-pointer rounded-full px-4 py-1 transition-colors"
+                                className="border-l border-r border-red-600 text-red-800 hover:bg-red-300 cursor-pointer rounded-full px-4 py-1 transition-colors"
                                 onClick={confirmDelete}
+                                disabled={deletingId !== null}
                             >
-                                Delete
+                                {deletingId ? 'Deleting...' : 'Delete'}
                             </button>
                         </div>
                     </div>
@@ -152,9 +164,10 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                             )}
                             <button
                                 onClick={() => handleDeleteClick(app.id)}
+                                disabled={deletingId === app.id}
                                 className="text-sm absolute bottom-0 right-2 px-4 py-1 rounded-full cursor-pointer border border-red-900 transition-colors text-red-300 font-light hover:bg-red-900"
                             >
-                                Delete
+                                {deletingId === app.id ? 'Deleting...' : 'Delete'}
                             </button>
                         </div>
 

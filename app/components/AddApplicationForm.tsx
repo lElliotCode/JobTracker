@@ -130,7 +130,7 @@ export default function AddApplicationForm({ onApplicationAdded }: Props) {
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full cursor-pinter bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                className="w-full cursor-pointer bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
             >
 
                 {loading ? 'Adding...' : 'Add Application'}
