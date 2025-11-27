@@ -20,6 +20,7 @@ type Props = {
 
 export default function ApplicationList({ refreshTrigger }: Props) {
     const [applications, setApplications] = useState<Application[]>([])
+    const [deleteId, setDeleteId] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -42,6 +43,30 @@ export default function ApplicationList({ refreshTrigger }: Props) {
         }
     }
 
+    const handleDeleteClick = (id: string) => {
+        setDeleteId(id)
+    }
+
+    const confirmDelete = async () => {
+
+        try {
+            const { error } = await supabase
+                .from('applications')
+                .delete()
+                .eq('id', deleteId)
+
+            if (error) throw error
+
+            setDeleteId(null)
+            fetchApplications()
+        } catch (error) {
+            console.error('Error deleting application: ', error)
+            alert('Error deleting application')
+        } finally {
+
+        }
+    }
+
 
     if (loading) {
         return <div className="text-center py-8 text-zinc-400">Loading applications...</div>
@@ -55,6 +80,35 @@ export default function ApplicationList({ refreshTrigger }: Props) {
 
     return (
         <div className="mt-8 space-y-4 w-[60vw] min-[900px]:w-[40vw] mx-auto ">
+            {deleteId && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    onClick={() => setDeleteId(null)} // <-- Si hacemos click fuera del cartel se cierra
+                >
+                    <div
+                        className="bg-white rounded-lg p-6 max-w-sm mx-4"
+                        onClick={(e) => e.stopPropagation()} // <-- Evita que el click dentro cierre el modal
+                    >
+                        <h3 className="text-xl text-center mb-2">Delete Application?</h3>
+                        <p className="text-sm text-gray-600 text-center">This action cannot be undone. The application will be <span className="font-bold">permanently deleted</span></p>
+
+                        <div className="flex justify-end gap-4 mt-4">
+                            <button
+                                onClick={() => setDeleteId(null)}
+                                className=" border-l border-r border-black hover:bg-blue-300 cursor-pointer rounded-full px-4 py-1 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                            className="border-l border-r border-red-600 text-red-800 hover:bg-red-300 cursor-pointer rounded-full px-4 py-1 transition-colors"
+                                onClick={confirmDelete}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div>
                 <h2 className="text-2xl text-center font-bold text-zinc-200">Your Applications </h2>
                 <span className="text-md text-blue-400">Total App's: {applications.length}</span>
@@ -97,7 +151,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                                 </p>
                             )}
                             <button
-                                onClick={() => alert(`Deleting application ${app.company}`)}
+                                onClick={() => handleDeleteClick(app.id)}
                                 className="text-sm absolute bottom-0 right-2 px-4 py-1 rounded-full cursor-pointer border border-red-900 transition-colors text-red-300 font-light hover:bg-red-900"
                             >
                                 Delete
