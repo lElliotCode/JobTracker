@@ -21,6 +21,15 @@ type Props = {
 export default function ApplicationList({ refreshTrigger }: Props) {
     const [applications, setApplications] = useState<Application[]>([])
     const [deleteId, setDeleteId] = useState<string | null>(null)
+    const [editingApp, setEditingApp] = useState<Application | null>(null)
+    const [editForm, setEditForm] = useState({
+        company: '',
+        position: '',
+        status: '',
+        url: '',
+        location: '',
+        salary_range: '',
+    })
     const [deletingId, setDeletingId] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -53,7 +62,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
     const confirmDelete = async () => {
         if (!deleteId) return
 
-        setDeleteId(deleteId)
+        setDeletingId(deleteId)
 
         try {
             const { error } = await supabase
@@ -69,8 +78,24 @@ export default function ApplicationList({ refreshTrigger }: Props) {
             console.error('Error deleting application: ', error)
             alert('Error deleting application')
         } finally {
-            setDeleteId(null)
+            setDeletingId(null)
         }
+    }
+
+    const handleEditClick = (app: Application) => {
+        setEditingApp(app)
+        setEditForm({
+            company: app.company,
+            position: app.position,
+            status: app.position,
+            url: app.url || '',
+            location: app.location || '',
+            salary_range: app.salary_range || ''
+        })
+    }
+
+    const handleUpdate = () => {
+
     }
 
 
@@ -121,8 +146,124 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                     </div>
                 </div>
             )}
-            <div>
-                <h2 className="text-2xl text-center font-bold text-zinc-200">Your Applications </h2>
+
+            {editingApp && (
+                <div
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-[fadeIn_0.2s_ease-out]"
+                    onClick={() => setEditingApp(null)} // <-- Si hacemos click fuera del cartel se cierra
+                >
+                    <div
+                        className="bg-white rounded-lg py-6 px-12 min-w-[30vw] mx-4 animate-[zoomIn_0.2s_ease-out] max-h-[90vh] overflow-y-auto"
+                        onClick={(e) => e.stopPropagation()} // <-- Evita que el click dentro cierre el modal
+                    >
+                        <h3 className="text-center text-xl">Edit Application</h3>
+
+                        <form className="space-y-4 py-4" onSubmit={handleUpdate}>
+                            <div>
+                                <label className="block text-sm font-medium mb-1 text-zinc-500 ">
+                                    Company
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.company}
+                                    onChange={(e) => setEditForm({ ...editForm, company: e.target.value })}
+                                    required
+                                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1 text-zinc-500">
+                                    Position
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.position}
+                                    onChange={(e) => setEditForm({ ...editForm, position: e.target.value })}
+                                    required
+                                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1 text-zinc-500">
+                                    URL
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.url}
+                                    onChange={(e) => setEditForm({ ...editForm, url: e.target.value })}
+                                    required
+                                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1 text-zinc-500">
+                                    Location
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.location}
+                                    onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                                    required
+                                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1 text-blue-500">
+                                    Salary Range
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.salary_range}
+                                    onChange={(e) => setEditForm({ ...editForm, salary_range: e.target.value })}
+                                    required
+                                    className="w-full px-3 py-2 border rounded-lg outline-none text-zinc-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium mb-1 text-zinc-500">
+                                    Status
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editForm.status}
+                                    onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                                    required
+                                    className={`w-full px-3 py-2 border rounded-lg outline-none text-zinc-500`}
+                                />
+                            </div>
+
+                            <div className="flex flex-col justify-end gap-4 mt-8 px-4 md:px-16">
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="border-l border-r border-green-600 text-green-800 hover:bg-green-100 cursor-pointer rounded-full px-4 py-1 transition-colors"
+                                >
+
+                                    {loading ? 'Editing...' : 'Edit Application'}
+                                </button>
+
+                                <button
+                                    onClick={() => setEditingApp(null)}
+                                    className="border-l border-r border-black hover:bg-blue-300 cursor-pointer rounded-full px-4 py-1 transition-colors"
+                                >
+
+                                    Cancel
+                                </button>
+
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            <div >
+                <h2 className="text-2xl text-center font-bold text-zinc-200 pb-6">Your Applications </h2>
                 <span className="text-md text-blue-400">Total App's: {applications.length}</span>
             </div>
             <div className="grid gap-4 pr-4 max-h-[70vh] overflow-auto">
@@ -132,7 +273,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                         className="border-b border-black rounded-lg p-4 hover:shadow-xl bg-black/20 transition-shadow"
                     >
                         <div className="text-zinc-300 flex justify-between items-start relative">
-                            <div>
+                            <div className="pt-12 min-[600px]:p-0">
                                 <h3 className="text-[1rem] font-light">Compania: <span className="font-bold">{app.company}</span></h3>
                                 <p className="font-light mt-1">Posición: <span className="font-bold">{app.position}</span></p>
                                 {app.location && (
@@ -140,35 +281,46 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                                 )}
                             </div>
 
-                            <span className="text-sm absolute top-0 right-0 bg-black/50  p-3 rounded-full">
-                                Estado: <span className={`px-3 py-1  rounded-full text-sm ${app.status === 'Applied' ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-700"}`} >{app.status}</span>
+                            <span className="text-xs absolute top-0 right-0 bg-black/50  p-3 rounded-full">
+                                Estado <span className={`px-3 py-1  rounded-full text-sm ${app.status === 'Applied' ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-700"}`} >{app.status}</span>
                             </span>
 
                         </div>
                         {app.salary_range && (
                             <p className="text-zinc-500">Rango Salarial: <span className="text-blue-400">$US {app.salary_range}</span></p>
                         )}
-                        <div className="mt-3 flex gap-4 text-sm text-zinc-600 relative">
-                            <span className="text-gray-400">Applied: {new Date(app.applied_date).toLocaleDateString()}</span>
-                            {app.url && (
-                                <p className="">URL:
-                                    <a
-                                        href={app.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="pl-2 text-blue-600 hover:underline"
-                                    >
-                                        View posting →
-                                    </a>
-                                </p>
-                            )}
-                            <button
-                                onClick={() => handleDeleteClick(app.id)}
-                                disabled={deletingId === app.id}
-                                className="text-sm absolute bottom-0 right-2 px-4 py-1 rounded-full cursor-pointer border border-red-900 transition-colors text-red-300 font-light hover:bg-red-900"
-                            >
-                                {deletingId === app.id ? 'Deleting...' : 'Delete'}
-                            </button>
+                        <div className="mt-3 flex flex-col gap-4 text-sm text-zinc-600 relative">
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Applied: {new Date(app.applied_date).toLocaleDateString()}</span>
+                                {app.url && (
+                                    <p className="">URL:
+                                        <a
+                                            href={app.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="pl-2 text-blue-600 hover:underline"
+                                        >
+                                            View posting →
+                                        </a>
+                                    </p>
+                                )}
+                            </div>
+                            <div className=" flex justify-end gap-4">
+                                <button
+                                    onClick={() => handleEditClick(app)}
+                                    disabled={deletingId === app.id}
+                                    className="text-sm px-4 py-1 rounded-full cursor-pointer border border-blue-900 transition-colors text-blue-300 font-light hover:bg-blue-900"
+                                >
+                                    {editingApp === app ? 'Editing...' : 'Edit'}
+                                </button>
+                                <button
+                                    onClick={() => handleDeleteClick(app.id)}
+                                    disabled={deletingId === app.id}
+                                    className="text-sm px-4 py-1 rounded-full cursor-pointer border border-red-900 transition-colors text-red-300 font-light hover:bg-red-900"
+                                >
+                                    {deletingId === app.id ? 'Deleting...' : 'Delete'}
+                                </button>
+                            </div>
                         </div>
 
                     </div>
