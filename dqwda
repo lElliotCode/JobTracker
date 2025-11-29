@@ -1,0 +1,59 @@
+[33mcommit 275c20449eb9f0d10fc5a8784de637ee946cc275[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Thu Nov 27 21:31:51 2025 -0300
+
+    feat: edit button for cards. Edit Modal, Edit form & Edit event
+
+[33mcommit 4dd2bb4c59f843f36180dbff69316fb6b7541cb8[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Wed Nov 26 21:35:59 2025 -0300
+
+    feat & style: Custom modal. Improve UI with animations and icons
+
+[33mcommit 5cc4cdfd9e114748030f1bd888b5cd8d797553c7[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Wed Nov 26 21:06:42 2025 -0300
+
+    feat: add custom delete confirmation modal
+
+[33mcommit ac026336961772d289b5e0df7c2a5bd16d1640ab[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Wed Nov 26 20:39:39 2025 -0300
+
+    feat: add delete button to application cards
+
+[33mcommit dbbd0b9fadf3761af4abe03761705c6a3751490e[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Tue Nov 25 20:31:08 2025 -0300
+
+    Extra Info Cards Applications. UI Update. Counter Applications
+
+[33mcommit 0c31435a8d519031e2a54001a9e4d67fd2bb8cac[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Tue Nov 25 20:06:46 2025 -0300
+
+    Trigger Recharge ApplicationList. UI Responsive basic
+
+[33mcommit e43dc08e572777be41afd95321ce5fb041c33770[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Tue Nov 25 19:49:52 2025 -0300
+
+    ApplicationList Component
+
+[33mcommit 3bcc9dc7b4bfbc80c3c9b739c25a6ad1cad65c3c[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Tue Nov 25 18:49:42 2025 -0300
+
+    Add: basic form to create applications
+
+[33mcommit 746052ef85a07b41b2a04e1a470535b1d9063f41[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Tue Nov 25 18:28:43 2025 -0300
+
+    Initial setup: Next.js + Supabase
+
+[33mcommit b42c4dafe1328ab4ae1688ad85e23dfcd8ec521f[m
+Author: Elliot <unforriven@gmail.com>
+Date:   Tue Nov 25 18:02:42 2025 -0300
+
+    Initial commit from Create Next App
