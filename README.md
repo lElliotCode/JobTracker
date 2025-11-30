@@ -61,7 +61,7 @@ An intuitive, fast web app that centralizes all your job applications with power
 ![Delete Modal](./public/screenshots/deleteModal.png)
 
 ### Search & Filter in Action
-![Filters](./public/screenshots/filter&order.png)
+![Filters](./public/screenshots/filter&Order.png)
 
 ### Responsive Design | Mobile
 ![Mobile Version](./public/screenshots/mobile1.png)
