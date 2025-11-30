@@ -34,12 +34,29 @@ export default function ApplicationList({ refreshTrigger }: Props) {
     const [deletingId, setDeletingId] = useState<string | null>(null)
     const [loading, setLoading] = useState(true) // <-- Loading para la carga de Applications
     const [statusFilter, setStatusFilter] = useState<string>('all')
+    const [searchQuery, setSearchQuery] = useState('')
+    const [sortBy, setSortBy] = useState<'date' | 'company' | 'status'>('date')
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+
 
     useEffect(() => {
         fetchApplications()
     }, [refreshTrigger])
 
-    const filteredApps = statusFilter === 'all' ? applications : applications.filter((app) => app.status === statusFilter)
+    const filteredApps = applications.filter((app) => {
+            if (statusFilter !== 'all' && app.status.toLowerCase() !== statusFilter.toLowerCase()) {
+                return false
+            }
+
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase()
+                return (
+                    app.company.toLowerCase().includes(query) ||
+                    app.position.toLowerCase().includes(query)
+                )
+            }
+            return true
+        })
 
     const fetchApplications = async () => {
         try {
@@ -313,24 +330,59 @@ export default function ApplicationList({ refreshTrigger }: Props) {
             <div>
                 <h2 className="text-2xl text-center font-bold text-zinc-200 pb-6">Your Applications </h2>
 
-                <div className="flex justify-around">
-                    <span className="text-md text-blue-400">Showing {filteredApps.length} of {applications.length} applications</span>
-                    <div>
-                        <label className="text-zinc-400">Filter: </label>
-                        <select className="p-1 outline-none rounded-full bg-blue-300/80 text-blue-900 font-light hover:font-bold transition-all active:text-zinc-800" onChange={e => setStatusFilter(e.target.value)}>
-                            <option value="all">All</option>
-                            <option value="Interview">Interview</option>
-                            <option value="Applied">Applied</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="Almost!">Almost!</option>
-                        </select>
+                <div className="flex flex-col justify-around items-center">
+
+                    <div className="flex gap-2">
+
+                        <span className="text-md text-blue-400">Showing {filteredApps.length} of {applications.length} applications</span>
+                        <div>
+                            <label className="text-zinc-400">Filter: </label>
+                            <select className="p-1 outline-none rounded-full bg-blue-300/80 text-blue-900 font-light hover:font-bold transition-all active:text-zinc-800" onChange={e => setStatusFilter(e.target.value)}>
+                                <option value="all">All</option>
+                                <option value="Interview">Interview</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Almost!">Almost!</option>
+                            </select>
+                        </div>
                     </div>
+
+                    <div className="mt-4 w-[60%]">
+                        <input
+                            type="text"
+                            id="searchQuery"
+                            placeholder="Search by company or position"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="bg-zinc-100/30 px-3 py-1 w-full rounded-full text-black text-md placeholder:text-gray-400 outline-none focus:bg-zinc-100/50 focus:placeholder:text-black/60"
+                        />
+                    </div>
+
+                    <div>
+                        <label>Sort:</label>
+                        <select 
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value as 'date' | 'company' | 'status')}
+                        >
+                            <option value="date">Date</option>
+                            <option value="company">Company</option>
+                            <option value="status">Status</option>
+                        </select>
+
+                        <button
+                            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                            title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                        >
+                            {sortOrder === 'asc' ? '↑' : '↓'}
+                        </button>
+                    </div>
+                    
                 </div>
             </div>
             <div className="grid gap-4 pr-4 max-h-[70vh] overflow-auto">
                 {filteredApps.length === 0 && (
-                    <p className="text-center py-8 text-zinc-600 m-auto">No applications in this category</p>
+                    <p className="text-center py-8 text-zinc-600 m-auto">No applications founded</p>
                 )}
                 {filteredApps.map((app) => (
                     <div
