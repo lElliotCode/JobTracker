@@ -89,6 +89,16 @@ export default function ApplicationList({ refreshTrigger }: Props) {
         return `${field} ${sortOrder === 'asc' ? 'A → Z' : 'Z → A'}`
     }
 
+    const availableSortOptions = statusFilter === 'all'
+    ? ['date', 'company', 'status']
+    : ['date', 'company']
+
+    useEffect(() => {
+        if (statusFilter !== 'all' && sortBy === 'status') {
+            setSortBy('date')
+        }
+    }, [statusFilter, sortBy])
+
     const fetchApplications = async () => {
         try {
             const { data, error } = await supabase
@@ -196,7 +206,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
     }
 
     if (loading) {
-        return <div className="text-center py-8 text-zinc-400">Loading applications...</div>
+        return <div className="text-center py-8 text-zinc-400 m-auto">Loading applications...</div>
     }
 
     if (applications.length === 0) {
@@ -399,7 +409,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                         >
                             <option value="date">Date</option>
                             <option value="company">Company</option>
-                            <option value="status">Status</option>
+                            {statusFilter === 'all' && <option value="status">Status</option>}
                         </select>
 
                         <button
