@@ -54,17 +54,19 @@ An intuitive, fast web app that centralizes all your job applications with power
 ### Main Dashboard with Filters
 ![Dashboard](./public/screenshots/main.png)
 
-### Add New Application
-![Add Application](./public/screenshots/add-modal.png)
-
 ### Edit Application
-![Edit Application](./public/screenshots/edit-modal.png)
+![Edit Application](./public/screenshots/editModal.png)
 
 ### Delete Confirmation
-![Delete Modal](./public/screenshots/delete-modal.png)
+![Delete Modal](./public/screenshots/deleteModal.png)
 
 ### Search & Filter in Action
-![Filters](./public/screenshots/filters.png)
+![Filters](./public/screenshots/filter&order.png)
+
+### Responsive Design | Mobile
+![Mobile Version](./public/screenshots/mobile1.png)
+
+![Mobile Version](./public/screenshots/mobile2.png)
 
 ---
 
