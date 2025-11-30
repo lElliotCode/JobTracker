@@ -5,7 +5,7 @@ A modern, fullstack web application to efficiently track your job applications. 
 
 > **Status:** MVP Functional - Core features complete, authentication and advanced analytics in roadmap.
 
-[🔗 Live Demo]([https://your-app.vercel.app](https://job-tracker-jet-three.vercel.app)) |
+[🔗 Live Demo] | https://job-tracker-jet-three.vercel.app) |
 
 ---
 
