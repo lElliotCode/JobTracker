@@ -44,19 +44,50 @@ export default function ApplicationList({ refreshTrigger }: Props) {
     }, [refreshTrigger])
 
     const filteredApps = applications.filter((app) => {
-            if (statusFilter !== 'all' && app.status.toLowerCase() !== statusFilter.toLowerCase()) {
-                return false
-            }
+        if (statusFilter !== 'all' && app.status.toLowerCase() !== statusFilter.toLowerCase()) {
+            return false
+        }
 
-            if (searchQuery) {
-                const query = searchQuery.toLowerCase()
-                return (
-                    app.company.toLowerCase().includes(query) ||
-                    app.position.toLowerCase().includes(query)
-                )
-            }
-            return true
-        })
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase()
+            return (
+                app.company.toLowerCase().includes(query) ||
+                app.position.toLowerCase().includes(query)
+            )
+        }
+        return true
+    })
+
+    const sortedApps = [...filteredApps].sort((a, b) => {
+        let comparison = 0
+
+        switch (sortBy) {
+            case 'date':
+                const dateA = new Date(a.applied_date).getTime()
+                const dateB = new Date(b.applied_date).getTime()
+
+                comparison = dateA - dateB
+                break
+            case 'company':
+                comparison = a.company.localeCompare(b.company)
+                break
+            case 'status':
+                comparison = a.status.localeCompare(b.status)
+                break
+        }
+
+        return sortOrder === 'asc' ? comparison : -comparison
+    })
+
+    const getSortLabel = () => {
+        const field = sortBy === 'date' ? 'Date' : sortBy === 'company' ? 'Company' : 'Status'
+        const orderOfDate = sortOrder === 'asc' ? 'oldest first' : 'newest first'
+
+        if (sortBy === 'date') {
+            return `${field} ${orderOfDate}`
+        }
+        return `${field} ${sortOrder === 'asc' ? 'A → Z' : 'Z → A'}`
+    }
 
     const fetchApplications = async () => {
         try {
@@ -334,7 +365,7 @@ export default function ApplicationList({ refreshTrigger }: Props) {
 
                     <div className="flex gap-2">
 
-                        <span className="text-md text-blue-400">Showing {filteredApps.length} of {applications.length} applications</span>
+                        <span className="text-md text-blue-400">Showing {sortedApps.length} of {applications.length} applications</span>
                         <div>
                             <label className="text-zinc-400">Filter: </label>
                             <select className="p-1 outline-none rounded-full bg-blue-300/80 text-blue-900 font-light hover:font-bold transition-all active:text-zinc-800" onChange={e => setStatusFilter(e.target.value)}>
@@ -359,11 +390,12 @@ export default function ApplicationList({ refreshTrigger }: Props) {
                         />
                     </div>
 
-                    <div>
-                        <label>Sort:</label>
-                        <select 
+                    <div className="pt-4">
+                        <label className="text-zinc-300 px-2">Sort:</label>
+                        <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value as 'date' | 'company' | 'status')}
+                            className="border-none outline-none rounded-full bg-zinc-200/80 px-2"
                         >
                             <option value="date">Date</option>
                             <option value="company">Company</option>
@@ -372,19 +404,27 @@ export default function ApplicationList({ refreshTrigger }: Props) {
 
                         <button
                             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                            title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                            className="px-2 m-2 border-r border-l border-black/80 text-zinc-400 hover:bg-black hover:text-zinc-200 cursor-pointer rounded-full"
                         >
-                            {sortOrder === 'asc' ? '↑' : '↓'}
+                            <span className="text-lg">{sortOrder === 'asc' ? 'Asc' : 'Desc'}</span>
+                            <span className="text-lg pl-2">
+                                {sortOrder === 'asc' ? '↑' : '↓'}
+                            </span>
+                            
                         </button>
                     </div>
-                    
+
+                    <div>
+                        <small className="text-zinc-400">Order by -- {getSortLabel()}</small>
+                    </div>
+
                 </div>
             </div>
             <div className="grid gap-4 pr-4 max-h-[70vh] overflow-auto">
                 {filteredApps.length === 0 && (
                     <p className="text-center py-8 text-zinc-600 m-auto">No applications founded</p>
                 )}
-                {filteredApps.map((app) => (
+                {sortedApps.map((app) => (
                     <div
                         key={app.id}
                         className="border-b border-black rounded-lg p-4 hover:shadow-xl bg-black/20 transition-shadow"
