@@ -2,11 +2,10 @@
 
 A modern, fullstack web application to efficiently track your job applications. Built with Next.js, TypeScript, and Supabase.
 
-![Job Tracker Preview](./public/screenshots/main.png)
 
 > **Status:** MVP Functional - Core features complete, authentication and advanced analytics in roadmap.
 
-[🔗 Live Demo](https://your-app.vercel.app) | [📹 Video Demo](#)
+[🔗 Live Demo] | https://job-tracker-jet-three.vercel.app) |
 
 ---
 
@@ -53,7 +52,7 @@ An intuitive, fast web app that centralizes all your job applications with power
 ## 📸 Screenshots
 
 ### Main Dashboard with Filters
-![Dashboard](./public/screenshots/dashboard.png)
+![Dashboard](./public/screenshots/main.png)
 
 ### Add New Application
 ![Add Application](./public/screenshots/add-modal.png)
